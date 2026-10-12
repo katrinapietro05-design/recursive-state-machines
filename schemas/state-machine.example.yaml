@@ -1,0 +1,29 @@
+machine_id: example.review-lifecycle
+status: illustrative
+source_class: synthetic
+states:
+  - id: drafted
+    terminal: false
+  - id: reviewed
+    terminal: false
+  - id: accepted
+    terminal: true
+  - id: returned
+    terminal: true
+transitions:
+  - from: drafted
+    to: reviewed
+    event: submit_for_review
+    guard: source_and_version_present
+  - from: reviewed
+    to: accepted
+    event: accept
+    guard: reviewer_authorized
+  - from: reviewed
+    to: returned
+    event: request_changes
+    guard: reason_recorded
+invariants:
+  - every_transition_has_timestamp
+  - every_transition_has_actor_or_system_identity
+  - state_does_not_imply_validation_beyond_recorded_checks
